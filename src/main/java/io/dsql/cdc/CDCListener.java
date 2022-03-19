@@ -43,7 +43,6 @@ public class CDCListener {
 
 		this.debeziumEngine = DebeziumEngine.create(ChangeEventFormat.of(Connect.class))
 				.using(connectorConfig.asProperties()).notifying(this::handleChangeEvent).build();
-
 		this.todoService = todoService;
 	}
 

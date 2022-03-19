@@ -31,16 +31,16 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3:3.12.0")
 
 	// consumer db
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("mysql:mysql-connector-java:8.0.28")
+	implementation("org.springframework.boot:spring-boot-starter-data-cassandra"){
+		exclude(group="com.datastax.oss", module ="java-driver-core")
+	}
+	implementation("com.yugabyte:java-driver-core:4.6.0-yb-10")
+	implementation(files("./debezium-connector-yugabytedb2-1.7.0-SNAPSHOT-jar-with-dependencies.jar"))
 
 	// consumer queue
 //	implementation("org.springframework.integration:spring-integration-jms")
 //	implementation("com.solace.spring.boot:solace-jms-spring-boot-starter:4.1.1")
 
-	dependencies {
-		implementation(files("./debezium-connector-yugabytedb2-1.7.0-SNAPSHOT-jar-with-dependencies.jar"))
-	}
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

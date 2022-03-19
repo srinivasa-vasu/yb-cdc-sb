@@ -19,12 +19,14 @@ public class TodoService implements ITodoService {
 	}
 
 	public void replicateData(Map<String, Object> todoEvent, Operation operation) {
-		final Todo todo = new ObjectMapper().convertValue(todoEvent, Todo.class);
+		var todo = new ObjectMapper().convertValue(todoEvent, Todo.class);
 		if (Operation.DELETE == operation) {
 			todoRepository.deleteById(todo.getId());
 		}
 		else {
-			todoRepository.save(todo);
+			var _todo = todoRepository.findById(todo.getId());
+			_todo.ifPresent(state -> state.setStatus(todo.isStatus()));
+			todoRepository.save(_todo.isPresent() ? _todo.get() : todo);
 		}
 	}
 

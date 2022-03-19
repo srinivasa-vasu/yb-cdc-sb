@@ -2,12 +2,18 @@ server:
   port: 8090
 
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/todo
-    username: root
-    password: root
-  jpa.hibernate.ddl-auto: create-drop
-  jpa.show-sql: true
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/todo
+#    username: root
+#    password: root
+#  jpa.hibernate.ddl-auto: create-drop
+#  jpa.show-sql: true
+  data:
+    cassandra:
+      contact-points: 127.0.0.2
+      local-datacenter: ybcloud
+      keyspace-name: alerts
+      schema-action: CREATE_IF_NOT_EXISTS
 
 ## Source Database Properties
 supplier:
@@ -17,7 +23,7 @@ supplier:
     database: yugabyte
     username: yugabyte
     password: yugabyte
-    streamId: 54470c729c694eebae7facf9e0241721
+    streamId: bcd1590f93c944159682a32d84a96b0b
     tableList: public.todo
 
 solace:
