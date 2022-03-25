@@ -1,7 +1,6 @@
 package io.dsql.cdc;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -53,15 +52,12 @@ public class CDCListener {
 		if (value != null) {
 			Operation operation = Operation.forCode((String) value.get(OPERATION));
 			if (operation != Operation.READ) {
-				String record = operation == Operation.DELETE ? BEFORE : AFTER;
-				Struct struct = (Struct) value.get(record);
-				Map<String, Object> payload = struct.schema().fields().stream().map(Field::name)
-						.filter(fieldName -> struct.get(fieldName) != null)
-						.map(fieldName -> Pair.of(fieldName, struct.get(fieldName)))
-						.collect(toMap(Pair::getKey, Pair::getValue));
-				todoService.replicateData(payload, operation);
-				// sender.sendEvent(payload);
-				log.info("Updated Data: {} with Operation: {}", payload, operation.name());
+				String changeSeq = operation == Operation.DELETE ? BEFORE : AFTER;
+				Struct record = (Struct) value.get(changeSeq);
+				todoService.replicateData((source) -> source.schema().fields().stream().map(Field::name)
+						.filter(fieldName -> source.get(fieldName) != null)
+						.map(fieldName -> Pair.of(fieldName, source.get(fieldName)))
+						.collect(toMap(Pair::getKey, Pair::getValue)), record, operation);
 			}
 		}
 	}

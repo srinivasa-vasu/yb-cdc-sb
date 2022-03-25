@@ -1,11 +1,10 @@
 package io.dsql.cdc;
 
-import java.util.Map;
-
 import io.debezium.data.Envelope.Operation;
+import org.apache.kafka.connect.data.Struct;
 
 public interface ITodoService {
 
-	void replicateData(Map<String, Object> customerData, Operation operation);
+	void replicateData(PayloadExtract payloadExtract, Struct record, Operation operation);
 
 }
